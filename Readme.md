@@ -81,6 +81,16 @@ document.getElementsByTagName('webview')[0].showDevTools(true,null)
 
 ![image-20240124160837126](./assets/image-20240124160837126.png)
 
+并且经过验证
+
+![image-20240125092441498](./assets/image-20240125092441498.png)
+
+webview最多十个，正如官方文档里描述
+
+![image-20240125092717686](./assets/image-20240125092717686.png)
+
+小程序中页面栈最多十层。
+
 上面的webview可以找到对应的页面层的结构，那么appservice要怎么找到呢？
 
 其实最简单的我们直接在首页里面的控制台打document就可以直接看到展示的逻辑层代码
@@ -151,3 +161,234 @@ wxvpkg包里面这个基础库文件的WAWebview.js和WAService.js
 ![img](./assets/format,png.png)
 
 WAService.js文件分析可以看出大致有 ： WeixinJSBridge、 NativeBuffer、 wxConsole、 WeixinWorker、 Reporter、 wx、 exparser、 **virtualDOM**、 **appServiceEngine** 等对象组成的
+
+# WEPT 
+
+### Dependencies
+
+1. babel-core: ^6.22.1
+
+   Babel 是一个 JavaScript 编译器，使您能够在代码中使用最新的 ECMAScript 功能。`babel-core`是巴别塔的中心部分。
+
+2. babel-preset-es2015: ^6.22.0
+
+   将 ECMAScript 2015 (ES6) 代码转换为向后兼容的 JavaScript 版本所需的 Babel 插件。
+
+3. babel-runtime: ^6.22.0
+
+   Babel 运行时包含对生成器和 async/await 等功能在转译代码中使用时所需的运行时支持。
+
+4. boxen: ^1.0.0
+
+   Boxen 是一个为控制台输出创建具有可选边框和样式的文本框的模块。
+
+5. chalk: ^1.1.3
+
+   Chalk 是一个用于在控制台中使用颜色设置文本样式的库。
+
+6. chokidar: ^1.6.1
+
+    Chokidar 是 Node.js 的文件监视实用程序。它允许您的应用程序对文件系统更改做出反应。
+
+7. commander: ^2.9.0
+
+   Commander 是 Node.js 的命令行界面库，可帮助您创建命令行工具。
+
+8. [concat-with-sourcemaps: ^1.0.4](https://www.npmjs.com/package/concat-with-sourcemaps)
+
+   用于连接文件和生成源映射的 NPM 模块。
+
+   ```json
+   var concat = new Concat(true, 'all.js', '\n');
+   concat.add(null, "// (c) John Doe");
+   concat.add('file1.js', file1Content);
+   concat.add('file2.js', file2Content, file2SourceMap);
+    
+   var concatenatedContent = concat.content;
+   var sourceMapForContent = concat.sourceMap;
+   ```
+
+   
+
+9. [convert-source-map: ^1.3.0](https://www.npmjs.com/package/convert-source-map)
+
+   将源映射从不同格式转换为不同格式，并允许添加/更改属性。
+
+   ```javascript
+   var convert = require('convert-source-map');
+   
+   var json = convert
+     .fromComment('//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnVpbGQvZm9vLm1pbi5qcyIsInNvdXJjZXMiOlsic3JjL2Zvby5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSIsInNvdXJjZVJvb3QiOiIvIn0=')
+     .toJSON();
+   
+   var modified = convert
+     .fromComment('//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnVpbGQvZm9vLm1pbi5qcyIsInNvdXJjZXMiOlsic3JjL2Zvby5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSIsInNvdXJjZVJvb3QiOiIvIn0=')
+     .setProperty('sources', [ 'SRC/FOO.JS' ])
+     .toJSON();
+   
+   console.log(json);
+   console.log(modified);
+   ```
+
+   ```json
+   {"version":3,"file":"build/foo.min.js","sources":["src/foo.js"],"names":[],"mappings":"AAAA","sourceRoot":"/"}
+   {"version":3,"file":"build/foo.min.js","sources":["SRC/FOO.JS"],"names":[],"mappings":"AAAA","sourceRoot":"/"}
+   ```
+
+   
+
+10. [debounce: ^1.0.0](https://www.npmjs.com/package/debounce)
+
+    延迟函数调用，直到上次调用后经过设定的时间
+
+    ```javascript
+    import debounce from 'debounce';
+    
+    function resize() {
+    	console.log('height', window.innerHeight);
+    	console.log('width', window.innerWidth);
+    }
+    
+    window.onresize = debounce(resize, 200);
+    ```
+
+11. ejs: ^3.1.5
+
+    EJS 是一种简单的模板语言，可让您使用纯 JavaScript 生成 HTML 标记。
+
+12. [et-improve: ^0.1.3](https://www.npmjs.com/package/et-improve)
+
+    一个 JavaScript 模板引擎，旨在使复杂的渲染变得简单、精确，同时用户友好。
+
+13. faye-websocket: ^0.11.1
+
+    它提供了在 Node.js 中轻松构建 WebSocket 服务器和客户端的类。它本身不提供服务器，而是使在现有 [Node](https://nodejs.org/)应用程序中处理 WebSocket 连接变得容易。[除了标准WebSocket API](https://html.spec.whatwg.org/multipage/comms.html#network)之外，它不提供任何抽象。它还提供了一种用于处理 [EventSource](https://html.spec.whatwg.org/multipage/comms.html#server-sent-events) 连接的抽象，这是一种单向连接，允许服务器将数据推送到客户端。它们基于流式 HTTP 响应，并且比 WebSocket 更容易通过代理进行访问。
+
+14. glob: ^7.1.6
+
+    Glob 是 Node.js 的模式匹配库，通常用于文件和目录匹配。
+
+15. growl: ^1.9.2
+
+    不引人注目的通知
+
+16. jsondiffpatch: ^0.2.4
+
+    针对 Javascript 对象的Diff & Patch
+
+17. koa: ^1.2.4
+
+    Koa 是由 Express 背后的团队设计的 Node.js Web 框架，强调更加模块化和更小的核心。
+
+18. koa-compress: ^1.0.9
+
+19. koa-formidable: ^1.0.0
+
+20. koa-logger: ^1.3.1
+
+21. koa-router: ^5.4.0
+
+22. koa-send: ^3.3.0
+
+23. koa-static: ^2.0.0
+
+24. merge: ^1.2.0
+
+    (对象（克隆）的（递归）合并。
+
+25. mkdir-p: 0.0.7
+
+26. [node-parallel](https://www.npmjs.com/search?q=node-parallel): ^0.1.6
+
+    并行提供了管理并行异步/同步调用的简单方法
+
+27. [node-serial: ^0.1.1](https://www.npmjs.com/search?q=node-serial)
+
+    用于处理串行回调的简单模块，可在节点和浏览器上运行
+
+28. [object-assign: ^4.1.1](https://www.npmjs.com/package/object-assign)
+
+    ```javascript
+    const objectAssign = require('object-assign');
+     
+    objectAssign({foo: 0}, {bar: 1});
+    //=> {foo: 0, bar: 1}
+     
+    // multiple sources
+    objectAssign({foo: 0}, {bar: 1}, {baz: 2});
+    //=> {foo: 0, bar: 1, baz: 2}
+     
+    // overwrites equal keys
+    objectAssign({foo: 0}, {foo: 1}, {foo: 2});
+    //=> {foo: 2}
+     
+    // ignores null and undefined sources
+    objectAssign({foo: 0}, null, {bar: 1}, undefined);
+    //=> {foo: 0, bar: 1}
+    ```
+
+    
+
+29. [open: ^7.3.0](https://www.npmjs.com/package/open)
+
+    打开 URL、文件、可执行文件等内容。跨平台。
+
+30. [source-map: ^0.5.6](https://www.npmjs.com/package/source-map)
+
+    生成并使用源映射
+
+31. [throttleit: ^1.0.0](https://www.npmjs.com/package/throttleit)
+
+    限制函数以限制其执行速度
+
+    ```javascript
+    import throttle from 'throttleit';
+    
+    // 限制处理数据的函数。
+    function processData(data) {
+    	console.log('Processing:', data);
+    
+    	//此处添加数据处理逻辑。
+    }
+    
+    // 限制“processData”函数最多每 3 秒调用一次。
+    const throttledProcessData = throttle(processData, 3000);
+    
+    //模拟使用不同的数据多次调用该函数。
+    throttledProcessData('Data 1');
+    throttledProcessData('Data 2');
+    throttledProcessData('Data 3');
+    ```
+
+32. [trash: ^7.0.0](https://www.npmjs.com/package/trash)
+
+    将文件和文件夹移至垃圾箱
+
+33. [tunnel: 0.0.4](https://www.npmjs.com/package/tunnel)
+
+    用于隧道代理的 HTTP/HTTPS 代理
+
+    ```javascript
+    var tunnel = require('tunnel');
+     
+    var tunnelingAgent = tunnel.httpsOverHttp({
+      proxy: {
+        host: 'localhost',
+        port: 3128
+      }
+    });
+     
+    var req = https.request({
+      host: 'example.com',
+      port: 443,
+      agent: tunnelingAgent
+    });
+    ```
+
+34. [update-notifier: ^1.0.3](https://www.npmjs.com/package/update-notifier)
+
+    更新 CLI 应用程序的通知
+
+35. [yargs: ^16.1.1](https://www.npmjs.com/package/yargs)
+
+​		Yargs 通过解析参数和生成优雅的用户界面，帮助你构建交互式命令行工具。

@@ -1,11 +1,11 @@
-import Nprogress from 'nprogress'
+import Nprogress from 'nprogress' //用于 Ajax 应用程序的超薄进度条
 import * as util from './util'
 import Bus from './bus'
 import {eachView, navigateBack, navigateTo, currentView} from './viewManage'
 import {onBack, lifeSycleEvent, toAppService} from './service'
 import toast from './component/toast'
 import tabbar from './tabbar'
-import debounce from 'debounce'
+import debounce from 'debounce' //延迟函数调用，直到最后一次调用后的设定时间结束
 import * as nativeMethods from './native'
 require('./message')
 
@@ -15,6 +15,7 @@ Object.defineProperty(navigator, 'userAgent', {
     return ua + ' weapp'
   }
 })
+console.log(ua);
 
 Nprogress.start()
 

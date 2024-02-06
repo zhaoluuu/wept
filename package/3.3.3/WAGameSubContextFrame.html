@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; connect-src *">
+</head>
+
+<body>
+    <script>
+        /* __wkrenderer */
+        /* WAGAME_REPLACE */
+        (() => {
+            var e = globalThis,
+                r = window.name,
+                t = JSON.parse,
+                n = JSON.stringify,
+                o = Reflect.get,
+                a = Reflect.set,
+                i = Reflect.apply,
+                c = Reflect.ownKeys,
+                s = Reflect.defineProperty,
+                d = Reflect.setPrototypeOf,
+                l = Reflect.getOwnPropertyDescriptor,
+                f = RegExp.prototype.test,
+                u = (String.prototype.slice, Object.prototype.toString, (e, r) => i(f, e, [r])),
+                p = document.appendChild.bind(document.body),
+                m = document.createElement.bind(document),
+                w = window.eval,
+                g = window.XMLHttpRequest,
+                y = encodeURIComponent,
+                {
+                    __wxConfig: b,
+                    __wkVersion: v = 0,
+                    __featBit: h = 0
+                } = top,
+                I = b.gamePlugins || b.plugins || {},
+                R = c(I).some((e => "wxe5a48f1ed5f544b7" === I[e].provider)),
+                _ = new Proxy({
+                    body: {},
+                    location: {
+                        href: "game.js",
+                        reload: function() {}
+                    }
+                }, {
+                    get: (e, r, t) => o(e, r, t) || document[r],
+                    set(e, r, t, n) {
+                        var o = l(document, r);
+                        return o && !o.configurable || s(document, r, {
+                            value: t,
+                            writable: !0,
+                            configurable: !0
+                        }), a(e, r, t, n)
+                    }
+                }),
+                x = new Set,
+                A = new Proxy({
+                    isIOSHighPerformanceMode: !0,
+                    hasOwnProperty(e) {
+                        return e in this || e in window
+                    }
+                }, {
+                    has: (e, r) => r in e || r in window,
+                    get(e, r, t) {
+                        var n = o(e, r, t);
+                        if (n && !x.has(r)) return n;
+                        switch (r) {
+                            case "top":
+                            case "window":
+                                return A;
+                            case "document":
+                                return _;
+                            case "location":
+                                return {
+                                    href: "game.js", reload: function() {}
+                                };
+                            case "isIOSHighPerformanceModePlus":
+                                return (2 & top.__featBit) > 0;
+                            default:
+                                return l(window, r) ? window[r] : n
+                        }
+                    },
+                    set(e, r, t, n) {
+                        var o = l(window, r);
+                        if ("document" === r) {
+                            for (var i in t) _[i] = t[i];
+                            return !0
+                        }
+                        return o && !o.configurable || (s(window, r, {
+                            value: t,
+                            writable: !0,
+                            configurable: !0
+                        }), x.add(r)), a(e, r, t, n)
+                    },
+                    defineProperty(e, r, t) {
+                        var n = l(window, r);
+                        return n && !n.configurable || s(window, r, t), s(e, r, t)
+                    }
+                }),
+                S = null;
+            s(e, "GameGlobal", {
+                value: A
+            }), e.__adapterCommand = (e, r = (e => {})) => {
+                if (e) {
+                    if (S) {
+                        if (e.__proto__ !== S) return
+                    } else S = e.__proto__;
+                    switch (e.cmd) {
+                        case "eval":
+                            return w(e.code);
+                        case "onWxConfigReady":
+                            var t = JSON.parse(e.wxConfig),
+                                n = t.gamePlugins || t.plugins || {};
+                            R = c(n).some((e => "wxe5a48f1ed5f544b7" === n[e].provider)), P(t);
+                            break;
+                        case "add":
+                            var o = m("script");
+                            if ("string" == typeof e.src)
+                                if (v >= 4) {
+                                    var a = e.src;
+                                    if (!u(/^\/wxcommlib\//, a)) {
+                                        var i, s;
+                                        if (u(/[#?]/, a)) break;
+                                        var l = !!b.openDataContext && "wx16bbfba8e6117309" !== (null === (i = b.accountInfo) || void 0 === i ? void 0 : i.appId) && "wx20afc706a711eefc" !== (null === (s = b.accountInfo) || void 0 === s ? void 0 : s.appId) && !R;
+                                        if (v >= 7) l && (a += "?strict=true");
+                                        else {
+                                            var f = "(function(window,globalThis,document,top,location){";
+                                            a += `?prefix=${y(l?`"use strict";${f}`:f)}&suffix=${y("})(GameGlobal,GameGlobal,GameGlobal.document, GameGlobal, GameGlobal.location)")}`
+                                        }
+                                    }
+                                    o.src = a
+                                } else o.src = e.src;
+                            else "string" == typeof e.code && (o.innerHTML = e.code);
+                            p(o), o.onload = r;
+                            break;
+                        case "protect":
+                            if (e.main) break;
+                            for (var g in d(document, null), document) delete document[g];
+                            break;
+                        default:
+                            console.warn("[adapter] wrong cmd:", e.cmd)
+                    }
+                }
+            };
+            var E = ["Object", "Function", "Array", "Number", "parseFloat", "parseInt", "Infinity", "NaN", "undefined", "Boolean", "String", "Symbol", "Date", "Promise", "RegExp", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "JSON", "Math", "console", "ArrayBuffer", "Uint8Array", "Int8Array", "Uint16Array", "Int16Array", "Uint32Array", "Int32Array", "Float32Array", "Float64Array", "Uint8ClampedArray", "BigUint64Array", "BigInt64Array", "DataView", "Map", "BigInt", "Set", "WeakMap", "WeakSet", "WeakRef", "FinalizationRegistry", "Proxy", "Reflect", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "escape", "unescape", "isFinite", "isNaN", "SharedArrayBuffer", "Atomics", "WebAssembly", "clearInterval", "clearTimeout", "setInterval", "setTimeout"];
+
+            function P(o) {
+                if (R && !/plugin/i.test(r) && !/opendata/i.test(r)) {
+                    e.XMLHttpRequest = g, e.invokeWasmFunc = ({
+                        md5: e = "",
+                        mode: r = 0,
+                        funcName: a = "",
+                        subVersion: i = 0,
+                        success: c = (() => {}),
+                        fail: s = (e => {})
+                    } = {}) => {
+                        var d, l = new g,
+                            f = o.model || "",
+                            u = (null === (d = o.accountInfo) || void 0 === d ? void 0 : d.appId) || "",
+                            p = r ? `https://unitywasm-40068.sh.gfp.tencent-cloud.com/subjs/${u}/${e}/${i}/${a}.js` : `https://game.weixin.qq.com/cgi-bin/gamewxagwasmsplitwap/getwasmfunc?data=${n({device:f,func_name:a,meta_info:{md5:e,appid:u,sub_version:i}})}`;
+                        try {
+                            if (l.open("GET", p, !1), l.send(), 200 !== l.status) throw null;
+                            var m = l.responseText;
+                            if (0 === r) {
+                                var y, b = t(m);
+                                if (b.errcode) throw "system error";
+                                m = null == b || null === (y = b.data) || void 0 === y ? void 0 : y.code
+                            }
+                            if (!m) throw "content is null";
+                            w(m), c()
+                        } catch (e) {
+                            var v = "content load error";
+                            e instanceof SyntaxError ? v = "content parse error" : "string" == typeof e && (v = e), s({
+                                errmsg: v
+                            })
+                        }
+                    }
+                }
+            }
+            c(window).forEach((e => {
+                if ("string" == typeof e) {
+                    if (e.startsWith("_")) return;
+                    if (E.includes(e)) return;
+                    delete window[e]
+                }
+            })), b.preload || P(b)
+        })();
+    </script>
+</body>
+
+</html>
